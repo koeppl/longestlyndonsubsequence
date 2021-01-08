@@ -137,6 +137,7 @@ fn s_star_positions(text : & ByteString, lyndon_factorization: & Vec<usize>) -> 
     // sl_types.set(n-1, S_TYPE);
     let mut current_lyndon_factor = lyndon_factorization.len()-1;
     //@ invariant: sl_type[0] = S_TYPE
+    s_star_positions.push(n-1); //@ the last character has to be an S* type
     for k in (1..n).rev() {
         assert_lt!(k, n);
         if k == lyndon_factorization[current_lyndon_factor] && k-1 == lyndon_factorization[current_lyndon_factor-1] { 
@@ -161,6 +162,7 @@ fn s_star_positions(text : & ByteString, lyndon_factorization: & Vec<usize>) -> 
             s_star_positions.push(k);
         }
     }
+    s_star_positions.push(0); //@ the first character has to be an S* type
     return s_star_positions;
 }
 
@@ -168,7 +170,7 @@ fn lms_substrings(text : & ByteString, lyndon_factorization: & Vec<usize>, s_sta
     let mut lms_substrings = Vec::new();
     let mut current_lyndon_factor = 0;
     for i in 0..s_star_positions.len() {
-        assert_le!(s_star_positions[i], lyndon_factorization[current_lyndon_factor]);
+        assert_ge!(s_star_positions[i], lyndon_factorization[current_lyndon_factor]);
         if s_star_positions[i+1] > lyndon_factorization[current_lyndon_factor] {
             let mut tail = text[s_star_positions[i]..lyndon_factorization[current_lyndon_factor]].to_vec();
             // let a = vec!(*tail);
