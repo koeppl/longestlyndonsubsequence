@@ -185,6 +185,36 @@ fn lms_substrings(text : & ByteString, lyndon_factorization: & Vec<usize>, s_sta
     return lms_substrings;
 }
 
+fn bbwt(text : & ByteString, lyndon_factorization: & Vec<usize>) -> ByteString {
+    use succinct::BitVector;
+    use succinct::Rank9;
+    
+    let n = text.len();
+    let ending_positions = {
+        let mut v = BitVector::with_capacity(n);
+        for s in lyndon_factorization {
+            v[s] = true;
+        }
+        v
+    };
+    
+    let mut lyndon_starting_position = 0;
+    let mut current_lyndon_factor = 0;
+
+    let mut sa = vec![0; text.len()];
+    for i in 0..text.len() {
+        sa[i] = i as usize;
+    }
+    sa.sort_by(|a, b| {
+        let mut l = 0;
+        while 
+    }
+    // sa.sort_by_key(|x| { 
+    //     &text[*x..] 
+    // });
+    sa
+}
+
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     if args.len() < 2 {
