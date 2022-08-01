@@ -65,21 +65,13 @@ fn subsequence(text: &[u8], stack: &[StackElement]) -> Vec<u8> {
     for el in stack {
         subseq.push(text[el.text_pos]);
     }
-    if ! stack.is_empty() {
-        subseq.extend(stack.last().unwrap().period.to_string().as_bytes().into_iter());
-    }
+    // if ! stack.is_empty() {
+    //     subseq.extend(stack.last().unwrap().period.to_string().as_bytes().into_iter());
+    // }
     subseq
 }
 
-
-fn main() {
-    let args: Vec<String> = std::env::args().collect();
-    if args.len() < 2 {
-        eprintln!("Usage: {} [string]", args[0]);
-        std::process::exit(1);
-    }
-    let text = file2byte_vector(args[1].as_str(), 0);
-
+fn longest_lyndon_subsequence(text : &[u8]) -> Vec<StackElement> {
     let mut larray = Vec::new();
     larray.resize(text.len(), usize::MAX);
     
@@ -94,7 +86,7 @@ fn main() {
             let top = stack.last().unwrap();
             let immature_character = text[stack[stack.len()-top.period as usize].text_pos];
             let compare_char = if upwardmove { lastchildedgelabel } else { immature_character };
-            match successor_element(& text.as_slice(), top.text_pos+1, compare_char) {
+            match successor_element(& text, top.text_pos+1, compare_char) {
                 None => {
                     upwardmove = true;
                     lastchildedgelabel = text[top.text_pos]+1;
@@ -129,6 +121,29 @@ fn main() {
             // println!("{:?}", larray);
         }
     }
-    println!("{:?}", std::str::from_utf8(& subsequence(& text, & longest_lyndon_subsequence)));
+    longest_lyndon_subsequence
+}
 
+fn check_subsequence(text: &[u8], result: &[u8]) {
+    assert_eq!(subsequence(& text, & longest_lyndon_subsequence(& text)), result);
+}
+
+
+#[test]
+fn test_lyndon_subsequence() {
+    check_subsequence(b"bccadbaccbcd", b"bccbccbcd");
+    check_subsequence(b"bccadbaccbc", b"abaccbc");
+    check_subsequence(b"bccadbaccb", b"abaccb");
+    check_subsequence(b"bccadbacc", b"bccdcc");
+}
+
+fn main() {
+    let args: Vec<String> = std::env::args().collect();
+    if args.len() < 2 {
+        eprintln!("Usage: {} [string]", args[0]);
+        std::process::exit(1);
+    }
+    let text = file2byte_vector(args[1].as_str(), 0);
+    let stack_subsequence = longest_lyndon_subsequence(& text);
+    println!("{:?}", std::str::from_utf8(& subsequence(& text, & stack_subsequence)));
 }
