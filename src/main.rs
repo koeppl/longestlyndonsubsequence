@@ -3,6 +3,7 @@ extern crate env_logger;
 extern crate log;
 use log::debug;
 
+use clap::Parser;
 
 #[macro_use]
 extern crate more_asserts;
@@ -19,11 +20,11 @@ pub fn file2byte_vector(filename: &str, prefix_length : usize) -> Vec<u8> {
     let buffer_length = if prefix_length > 0 { std::cmp::min(prefix_length as u64, metadata.len()) } else { metadata.len() as u64};
     assert!(buffer_length <= std::usize::MAX as u64);
     let mut buffer = Vec::new();
-    buffer.reserve_exact(buffer_length as usize);
+    buffer.resize(buffer_length as usize, 0u8);
 
-    match f.read_to_end(&mut buffer) {
-        Ok(length) => assert_eq!(length, buffer.len()),
-        Err(x) =>  panic!(x)
+    match f.read_exact(&mut buffer) {
+        Ok(()) => (), //assert_eq!(length, buffer.len()),
+        Err(x) =>  panic!("{}", x)
     };
     buffer
 }
@@ -77,7 +78,7 @@ fn subsequence(text: &[u8], stack: &[StackElement]) -> Vec<u8> {
 
 fn longest_lyndon_subsequence(text : &[u8]) -> Vec<StackElement> {
     let mut larray = Vec::new();
-    larray.resize(text.len(), usize::MAX);
+    larray.resize(text.len()+1, usize::MAX);
     
     let mut longest_lyndon_subsequence = Vec::new();
 
@@ -86,6 +87,9 @@ fn longest_lyndon_subsequence(text : &[u8]) -> Vec<StackElement> {
     let mut upwardmove = false;
     for starting_position in leftmost_distinct_characters(& text) { 
         stack.push(StackElement { text_pos: starting_position, period : 1 });
+        if longest_lyndon_subsequence.is_empty() {
+            longest_lyndon_subsequence = stack.clone();
+        }
         while !stack.is_empty() {
             let top = stack.last().unwrap();
             let immature_character = text[stack[stack.len()-top.period as usize].text_pos];
@@ -100,7 +104,6 @@ fn longest_lyndon_subsequence(text : &[u8]) -> Vec<StackElement> {
                     assert_lt!(top.text_pos, i);
                     assert_le!(compare_char, text[i]);
                     let subsequence_length = stack.len()+1;
-                    // if false {
                     if larray[subsequence_length] < i {
                         upwardmove = true;
                         lastchildedgelabel = text[i]+1;
@@ -139,15 +142,39 @@ fn test_lyndon_subsequence() {
     check_subsequence(b"bccadbaccbc", b"abaccbc");
     check_subsequence(b"bccadbaccb", b"abaccb");
     check_subsequence(b"bccadbacc", b"bccdcc");
+    check_subsequence(b"a", b"a");
+    check_subsequence(b"aa", b"a");
+    check_subsequence(b"aaa", b"a");
+    check_subsequence(b"aaab", b"aaab");
+    check_subsequence(b"aaaba", b"aaab");
+}
+
+
+/// Simple program to greet a person
+#[derive(Parser, Debug)]
+#[clap(author, version, about, long_about = None)]
+struct Args {
+   /// Name of the person to greet
+   #[clap(short, long, value_parser)]
+   filename: String,
+
+   /// Number of times to greet
+   #[clap(short, long, value_parser, default_value_t = 0)]
+   prefix: usize,
 }
 
 fn main() {
-    let args: Vec<String> = std::env::args().collect();
-    if args.len() < 2 {
-        eprintln!("Usage: {} [string]", args[0]);
-        std::process::exit(1);
-    }
-    let text = file2byte_vector(args[1].as_str(), 0);
+	let args = Args::parse();
+    //
+    //
+    // let args: Vec<String> = std::env::args().collect();
+    // if args.len() < 2 {
+    //     eprintln!("Usage: {} [string]", args[0]);
+    //     std::process::exit(1);
+    // }
+    let text = file2byte_vector(& args.filename, args.prefix);
+    println!("{:?} {:?}", text.len(), args.prefix);
+
     let stack_subsequence = longest_lyndon_subsequence(& text);
     println!("{:?}", std::str::from_utf8(& subsequence(& text, & stack_subsequence)));
 }
