@@ -8,3 +8,5 @@ edition = "2018"
 
 [dependencies]
 more-asserts = "0.2.1"
+log = "0.4.0"
+env_logger = "0.8.3"

@@ -1,4 +1,8 @@
 
+extern crate env_logger;
+extern crate log;
+use log::debug;
+
 
 #[macro_use]
 extern crate more_asserts;
@@ -100,7 +104,7 @@ fn longest_lyndon_subsequence(text : &[u8]) -> Vec<StackElement> {
                     if larray[subsequence_length] < i {
                         upwardmove = true;
                         lastchildedgelabel = text[i]+1;
-                        println!("{:?} + {} DISCARD", std::str::from_utf8(& subsequence(& text, & stack)).unwrap(), text[i]);
+                        debug!("{:?} + {} DISCARD", std::str::from_utf8(& subsequence(& text, & stack)).unwrap(), text[i]);
                     }
                     else {
                         let new_period = 
@@ -117,7 +121,7 @@ fn longest_lyndon_subsequence(text : &[u8]) -> Vec<StackElement> {
                     }
                 }
             }
-            println!("{:?} FOUND", std::str::from_utf8(& subsequence(& text, & stack)).unwrap());
+            debug!("{:?} FOUND", std::str::from_utf8(& subsequence(& text, & stack)).unwrap());
             // println!("{:?}", larray);
         }
     }
