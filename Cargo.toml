@@ -1,5 +1,5 @@
 [package]
-name = "bbwtconstr"
+name = "longestlyndonsubseq"
 version = "0.1.0"
 authors = ["Dominik Köppl <dominik.koeppl@uni-dortmund.de>"]
 edition = "2018"

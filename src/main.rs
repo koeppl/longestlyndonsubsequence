@@ -150,15 +150,15 @@ fn test_lyndon_subsequence() {
 }
 
 
-/// Simple program to greet a person
+/// Computes the longest Lyndon subsequence
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
-   /// Name of the person to greet
+   /// input filename
    #[clap(short, long, value_parser)]
    filename: String,
 
-   /// Number of times to greet
+   /// the number of characters to read from the input file
    #[clap(short, long, value_parser, default_value_t = 0)]
    prefix: usize,
 }
@@ -173,8 +173,8 @@ fn main() {
     //     std::process::exit(1);
     // }
     let text = file2byte_vector(& args.filename, args.prefix);
-    println!("{:?} {:?}", text.len(), args.prefix);
+    // println!("{:?} {:?}", text.len(), args.prefix);
 
     let stack_subsequence = longest_lyndon_subsequence(& text);
-    println!("{:?}", std::str::from_utf8(& subsequence(& text, & stack_subsequence)));
+    println!("{}", std::str::from_utf8(& subsequence(& text, & stack_subsequence)).unwrap());
 }
