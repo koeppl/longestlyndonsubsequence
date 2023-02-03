@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Köppl"
+  given-names: "Dominik"
+  orcid: "http://orcid.org/0000-0002-8721-4444"
+title: "Computing Longest Lyndon Subsequences"
+url: "https://github.com/koeppl/longestlyndonsubsequence"
+preferred-citation:
+  type: conference-paper
+  authors:
+  - family-names: "Bannai"
+    given-names: "Hideo"
+  - family-names: "I"
+    given-names: "Tomohiro"
+  - family-names: "Kociumaka"
+    given-names: "Tomasz"
+  - family-names: "Köppl"
+    given-names: "Dominik"
+    orcid: "http://orcid.org/0000-0002-8721-4444"
+  - family-names: "Puglisi"
+    given-names: "Simon J."
+  doi: 10.1007/978-3-031-06678-8_10
+  journal: "Proc. IWOCA"
+  start: 128 # First page number
+  end: 142 # Last page number
+  title: "Computing Longest Lyndon Subsequences"
+  year: 2022
