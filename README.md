@@ -1,4 +1,6 @@
 # Computing Longest Lyndon Subsequences
+![automatic test](https://github.com/koeppl/longestlyndonsubsequence/actions/workflows/cargo.yml/badge.svg)
+
 
 This tool computes the longest Lyndon subsequence found in a given text file.
 
