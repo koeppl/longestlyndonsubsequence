@@ -14,12 +14,12 @@ pub fn file2byte_vector(filename: &str, prefix_length: usize) -> Vec<u8> {
     use std::io::Read;
 
     let path = std::path::Path::new(filename);
-    let mut f = fs::File::open(&path).expect("no file found");
-    let metadata = fs::metadata(&path).expect("unable to read metadata");
+    let mut f = fs::File::open(path).expect("no file found");
+    let metadata = fs::metadata(path).expect("unable to read metadata");
     let buffer_length = if prefix_length > 0 {
         std::cmp::min(prefix_length as u64, metadata.len())
     } else {
-        metadata.len() as u64
+        metadata.len()
     };
     assert!(buffer_length <= std::usize::MAX as u64);
     let mut buffer = Vec::new();
@@ -98,7 +98,7 @@ fn longest_lyndon_subsequence(text: &[u8]) -> Vec<StackElement> {
         }
         while !stack.is_empty() {
             let top = stack.last().unwrap();
-            let immature_character = text[stack[stack.len() - top.period as usize].text_pos];
+            let immature_character = text[stack[stack.len() - top.period].text_pos];
             let compare_char = if upwardmove {
                 lastchildedgelabel
             } else {
@@ -156,10 +156,7 @@ fn longest_lyndon_subsequence(text: &[u8]) -> Vec<StackElement> {
 
 #[cfg(test)]
 fn check_subsequence(text: &[u8], result: &[u8]) {
-    assert_eq!(
-        subsequence(text, &longest_lyndon_subsequence(text)),
-        result
-    );
+    assert_eq!(subsequence(text, &longest_lyndon_subsequence(text)), result);
 }
 
 #[test]
